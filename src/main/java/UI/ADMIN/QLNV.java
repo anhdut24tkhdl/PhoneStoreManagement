@@ -5,48 +5,203 @@ import Service.NhanVienService;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class QLNV extends javax.swing.JFrame {
+public class QLNV extends JFrame {
 
     private JTable tblNhanVien;
     private JScrollPane jScrollPane1;
     private JTextField txtTimKiem;
-    private JButton btnTimKiem, btnLamMoi, btnThem, btnSua, btnXoa, btnQuayLai;
+
+    private JButton btnTimKiem;
+    private JButton btnLamMoi;
+    private JButton btnThem;
+    private JButton btnSua;
+    private JButton btnXoa;
+    private JButton btnQuayLai;
+
     private JLabel lblTitle;
+    private JLabel lblSubTitle;
 
     public QLNV() {
         initComponents();
-        customUI();
         loadNhanVien();
     }
 
-    private void customUI() {
+    private void initComponents() {
         setTitle("Quản lý nhân viên");
-        getContentPane().setBackground(new Color(245, 247, 250));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(980, 650);
+        setResizable(false);
 
-        tblNhanVien.setRowHeight(32);
+        JPanel root = new JPanel(new GridBagLayout());
+        root.setBackground(new Color(230, 240, 255));
+
+        JPanel card = new JPanel();
+        card.setPreferredSize(new Dimension(900, 570));
+        card.setBackground(Color.WHITE);
+        card.setBorder(new EmptyBorder(25, 35, 25, 35));
+        card.setLayout(new BorderLayout(0, 22));
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(Color.WHITE);
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+
+        lblTitle = new JLabel("QUẢN LÝ NHÂN VIÊN");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblTitle.setForeground(new Color(0, 86, 179));
+        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblSubTitle = new JLabel("Danh sách và thông tin nhân viên trong hệ thống");
+        lblSubTitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblSubTitle.setForeground(new Color(100, 116, 139));
+        lblSubTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        headerPanel.add(lblTitle);
+        headerPanel.add(Box.createVerticalStrut(8));
+        headerPanel.add(lblSubTitle);
+
+        txtTimKiem = new JTextField();
+        txtTimKiem.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtTimKiem.setPreferredSize(new Dimension(400, 40));
+        txtTimKiem.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(180, 210, 240), 1),
+                new EmptyBorder(5, 12, 5, 12)
+        ));
+
+        btnTimKiem = createButton("Tìm kiếm", new Color(37, 99, 235), 120, 40);
+        btnLamMoi = createButton("Làm mới", new Color(14, 165, 233), 120, 40);
+
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        searchPanel.setBackground(Color.WHITE);
+        searchPanel.add(txtTimKiem);
+        searchPanel.add(btnTimKiem);
+        searchPanel.add(btnLamMoi);
+
+        tblNhanVien = new JTable();
+        tblNhanVien.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Mã NV", "Họ tên", "Giới tính", "SĐT", "Địa chỉ", "Chức vụ"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
         tblNhanVien.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tblNhanVien.setRowHeight(34);
+        tblNhanVien.setSelectionBackground(new Color(219, 234, 254));
+        tblNhanVien.setSelectionForeground(new Color(15, 23, 42));
+        tblNhanVien.setGridColor(new Color(226, 232, 240));
+        tblNhanVien.setShowGrid(true);
+
         tblNhanVien.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         tblNhanVien.getTableHeader().setBackground(new Color(37, 99, 235));
         tblNhanVien.getTableHeader().setForeground(Color.WHITE);
+        tblNhanVien.getTableHeader().setPreferredSize(new Dimension(0, 38));
 
-        Font btnFont = new Font("Segoe UI", Font.BOLD, 13);
-        JButton[] buttons = {btnTimKiem, btnLamMoi, btnThem, btnSua, btnXoa, btnQuayLai};
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-        for (JButton btn : buttons) {
-            btn.setFont(btnFont);
-            btn.setForeground(Color.WHITE);
-            btn.setFocusPainted(false);
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        }
+        tblNhanVien.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
-        btnTimKiem.setBackground(new Color(124, 58, 237));
-        btnLamMoi.setBackground(new Color(249, 115, 22));
-        btnThem.setBackground(new Color(22, 163, 74));
-        btnSua.setBackground(new Color(37, 99, 235));
-        btnXoa.setBackground(new Color(220, 38, 38));
-        btnQuayLai.setBackground(new Color(107, 114, 128));
+        tblNhanVien.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tblNhanVien.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tblNhanVien.getColumnModel().getColumn(2).setPreferredWidth(90);
+        tblNhanVien.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tblNhanVien.getColumnModel().getColumn(4).setPreferredWidth(250);
+        tblNhanVien.getColumnModel().getColumn(5).setPreferredWidth(120);
+
+        jScrollPane1 = new JScrollPane(tblNhanVien);
+        jScrollPane1.setBorder(BorderFactory.createLineBorder(new Color(203, 213, 225), 1));
+        jScrollPane1.getViewport().setBackground(Color.WHITE);
+
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBackground(Color.WHITE);
+        tablePanel.add(searchPanel, BorderLayout.NORTH);
+        tablePanel.add(Box.createVerticalStrut(15), BorderLayout.CENTER);
+
+        JPanel tableWrapper = new JPanel(new BorderLayout());
+        tableWrapper.setBackground(Color.WHITE);
+        tableWrapper.add(searchPanel, BorderLayout.NORTH);
+        tableWrapper.add(Box.createVerticalStrut(15), BorderLayout.CENTER);
+        tableWrapper.add(jScrollPane1, BorderLayout.SOUTH);
+
+        btnThem = createButton("Thêm", new Color(22, 163, 74), 125, 42);
+        btnSua = createButton("Sửa", new Color(249, 115, 22), 125, 42);
+        btnXoa = createButton("Xóa", new Color(220, 38, 38), 125, 42);
+        btnQuayLai = createButton("Quay lại", new Color(100, 116, 139), 125, 42);
+
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
+        actionPanel.setBackground(Color.WHITE);
+        actionPanel.add(btnThem);
+        actionPanel.add(btnSua);
+        actionPanel.add(btnXoa);
+        actionPanel.add(btnQuayLai);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 16));
+        centerPanel.setBackground(Color.WHITE);
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        centerPanel.add(jScrollPane1, BorderLayout.CENTER);
+        centerPanel.add(actionPanel, BorderLayout.SOUTH);
+
+        card.add(headerPanel, BorderLayout.NORTH);
+        card.add(centerPanel, BorderLayout.CENTER);
+
+        root.add(card);
+        setContentPane(root);
+
+        btnTimKiem.addActionListener(e -> timKiemNhanVien());
+
+        txtTimKiem.addActionListener(e -> timKiemNhanVien());
+
+        btnLamMoi.addActionListener(e -> {
+            txtTimKiem.setText("");
+            loadNhanVien();
+        });
+
+        btnThem.addActionListener(e -> {
+            ThemNhanVien1 dialog = new ThemNhanVien1(this, true);
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+            loadNhanVien();
+        });
+
+        btnSua.addActionListener(e -> suaNhanVien());
+
+        btnXoa.addActionListener(e -> xoaNhanVien());
+
+        btnQuayLai.addActionListener(e -> {
+            TrangChuAdmin tc = new TrangChuAdmin();
+            tc.setVisible(true);
+            dispose();
+        });
+
+        setLocationRelativeTo(null);
+    }
+
+    private JButton createButton(String text, Color bgColor, int width, int height) {
+        JButton button = new JButton(text);
+
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setVerticalAlignment(SwingConstants.CENTER);
+        button.setMargin(new Insets(0, 0, 0, 0));
+
+        return button;
     }
 
     private void loadNhanVien() {
@@ -73,6 +228,21 @@ public class QLNV extends javax.swing.JFrame {
         }
 
         tblNhanVien.setModel(model);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        tblNhanVien.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        tblNhanVien.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+
+        tblNhanVien.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tblNhanVien.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tblNhanVien.getColumnModel().getColumn(2).setPreferredWidth(90);
+        tblNhanVien.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tblNhanVien.getColumnModel().getColumn(4).setPreferredWidth(250);
+        tblNhanVien.getColumnModel().getColumn(5).setPreferredWidth(120);
     }
 
     private void timKiemNhanVien() {
@@ -81,6 +251,11 @@ public class QLNV extends javax.swing.JFrame {
         NhanVienService service = new NhanVienService();
         ArrayList<NhanVien> list = service.getAllNhanVien();
         ArrayList<NhanVien> ketQua = new ArrayList<>();
+
+        if (keyword.isEmpty()) {
+            hienThiTable(list);
+            return;
+        }
 
         for (NhanVien nv : list) {
             if (String.valueOf(nv.getMaNV()).contains(keyword)
@@ -95,160 +270,73 @@ public class QLNV extends javax.swing.JFrame {
         hienThiTable(ketQua);
     }
 
-    private void initComponents() {
-        lblTitle = new JLabel("QUẢN LÝ NHÂN VIÊN");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    private void suaNhanVien() {
+        int row = tblNhanVien.getSelectedRow();
 
-        txtTimKiem = new JTextField();
-        btnTimKiem = new JButton("Tìm kiếm");
-        btnLamMoi = new JButton("Làm mới");
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa!");
+            return;
+        }
 
-        tblNhanVien = new JTable();
-        jScrollPane1 = new JScrollPane(tblNhanVien);
+        int maNV = Integer.parseInt(tblNhanVien.getValueAt(row, 0).toString());
+        String hoTen = tblNhanVien.getValueAt(row, 1).toString();
+        String gioiTinh = tblNhanVien.getValueAt(row, 2).toString();
+        String sdt = tblNhanVien.getValueAt(row, 3).toString();
+        String diaChi = tblNhanVien.getValueAt(row, 4).toString();
+        String chucVu = tblNhanVien.getValueAt(row, 5).toString();
 
-        btnThem = new JButton("Thêm");
-        btnSua = new JButton("Sửa");
-        btnXoa = new JButton("Xóa");
-        btnQuayLai = new JButton("Quay lại");
+        NhanVien nv = new NhanVien(maNV, hoTen, gioiTinh, sdt, diaChi, chucVu);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        SuaNhanVien dialog = new SuaNhanVien(this, true, nv);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
 
-        tblNhanVien.setModel(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Mã NV", "Họ tên", "Giới tính", "SĐT", "Địa chỉ", "Chức vụ"}
-        ));
+        loadNhanVien();
+    }
 
-        btnTimKiem.addActionListener(e -> timKiemNhanVien());
+    private void xoaNhanVien() {
+        int row = tblNhanVien.getSelectedRow();
 
-        btnLamMoi.addActionListener(e -> {
-            txtTimKiem.setText("");
-            loadNhanVien();
-        });
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
+            return;
+        }
 
-        btnThem.addActionListener(e -> {
-            ThemNhanVien dialog = new ThemNhanVien(this, true);
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
-            loadNhanVien();
-        });
+        int maNV = Integer.parseInt(tblNhanVien.getValueAt(row, 0).toString());
 
-        btnSua.addActionListener(e -> {
-            int row = tblNhanVien.getSelectedRow();
-
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa!");
-                return;
-            }
-
-            int maNV = Integer.parseInt(tblNhanVien.getValueAt(row, 0).toString());
-            String hoTen = tblNhanVien.getValueAt(row, 1).toString();
-            String gioiTinh = tblNhanVien.getValueAt(row, 2).toString();
-            String sdt = tblNhanVien.getValueAt(row, 3).toString();
-            String diaChi = tblNhanVien.getValueAt(row, 4).toString();
-            String chucVu = tblNhanVien.getValueAt(row, 5).toString();
-
-            NhanVien nv = new NhanVien(maNV, hoTen, gioiTinh, sdt, diaChi, chucVu);
-
-            SuaNhanVienDialog dialog = new SuaNhanVienDialog(this, true, nv);
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
-
-            loadNhanVien();
-        });
-
-        btnXoa.addActionListener(e -> {
-            int row = tblNhanVien.getSelectedRow();
-
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
-                return;
-            }
-
-            int maNV = Integer.parseInt(tblNhanVien.getValueAt(row, 0).toString());
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có chắc muốn xóa nhân viên này?",
-                    "Xác nhận xóa",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                NhanVienService service = new NhanVienService();
-
-                if (service.xoaNhanVien(maNV)) {
-                    JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công!");
-                    loadNhanVien();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Xóa nhân viên thất bại!");
-                }
-            }
-        });
-
-        btnQuayLai.addActionListener(e -> {
-            TrangChuAdmin tc = new TrangChuAdmin();
-            tc.setVisible(true);
-            dispose();
-        });
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(new Color(245, 247, 250));
-
-        GroupLayout layout = new GroupLayout(mainPanel);
-        mainPanel.setLayout(layout);
-
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(30)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(lblTitle)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(txtTimKiem, 330, 330, 330)
-                            .addGap(10)
-                            .addComponent(btnTimKiem, 120, 120, 120)
-                            .addGap(10)
-                            .addComponent(btnLamMoi, 120, 120, 120))
-                        .addComponent(jScrollPane1, 740, 740, 740)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(90)
-                            .addComponent(btnThem, 120, 120, 120)
-                            .addGap(20)
-                            .addComponent(btnSua, 120, 120, 120)
-                            .addGap(20)
-                            .addComponent(btnXoa, 120, 120, 120)
-                            .addGap(20)
-                            .addComponent(btnQuayLai, 120, 120, 120)))
-                    .addGap(30))
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc muốn xóa nhân viên này?",
+                "Xác nhận xóa",
+                JOptionPane.YES_NO_OPTION
         );
 
-        layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                .addGap(20)
-                .addComponent(lblTitle)
-                .addGap(20)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTimKiem, 35, 35, 35)
-                    .addComponent(btnTimKiem, 35, 35, 35)
-                    .addComponent(btnLamMoi, 35, 35, 35))
-                .addGap(20)
-                .addComponent(jScrollPane1, 360, 360, 360)
-                .addGap(25)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnThem, 38, 38, 38)
-                    .addComponent(btnSua, 38, 38, 38)
-                    .addComponent(btnXoa, 38, 38, 38)
-                    .addComponent(btnQuayLai, 38, 38, 38))
-                .addGap(25)
-        );
+        if (confirm == JOptionPane.YES_OPTION) {
+            NhanVienService service = new NhanVienService();
 
-        setContentPane(mainPanel);
-        setSize(820, 580);
-        setResizable(false);
-        setLocationRelativeTo(null);
+            if (service.xoaNhanVien(maNV)) {
+                JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công!");
+                loadNhanVien();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa nhân viên thất bại!");
+            }
+        }
     }
 
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new QLNV().setVisible(true));
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        EventQueue.invokeLater(() -> {
+            new QLNV().setVisible(true);
+        });
     }
 }

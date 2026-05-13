@@ -131,7 +131,7 @@ public class HoaDon extends javax.swing.JFrame {
                 hd.getMaKH(),
                 hd.getMaNV(),
                 hd.getNgayLap(),
-                hd.getTongTien()
+                hd.getTongTien()/1000000 +"Triệu"
             });
         }
 
