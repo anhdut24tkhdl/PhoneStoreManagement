@@ -1,5 +1,6 @@
 package UI.ADMIN;
 
+import UI.DangNhap;
 import Utils.Session;
 import java.awt.*;
 import javax.swing.*;
@@ -30,7 +31,12 @@ public class TrangChuAdmin extends javax.swing.JFrame {
         Font btnFont = new Font("Segoe UI", Font.BOLD, 17);
 
         JButton[] buttons = {
-            btnQLNV, btnQLSP, btnQLH, btnQLHD, btnQLPN, btnThoat
+            btnQLNV,
+            btnQLSP,
+            btnQLH,
+            btnQLHD,
+            btnQLPN,
+            btnThoat
         };
 
         for (JButton btn : buttons) {
@@ -73,7 +79,7 @@ public class TrangChuAdmin extends javax.swing.JFrame {
         btnQLH = new JButton("Quản lý hãng điện thoại");
         btnQLHD = new JButton("Quản lý hóa đơn");
         btnQLPN = new JButton("Quản lý phiếu nhập");
-        btnThoat = new JButton("Thoát");
+        btnThoat = new JButton("Đăng xuất");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,7 +113,14 @@ public class TrangChuAdmin extends javax.swing.JFrame {
             dispose();
         });
 
-        btnThoat.addActionListener(e -> System.exit(0));
+        btnThoat.addActionListener(e -> {
+            Session.currentUser = null;
+
+            DangNhap dn = new DangNhap();
+            dn.setVisible(true);
+
+            dispose();
+        });
 
         JPanel topPanel = new JPanel(new GridLayout(2, 1));
         topPanel.setBackground(new Color(245, 247, 250));
@@ -134,25 +147,25 @@ public class TrangChuAdmin extends javax.swing.JFrame {
         mainPanel.setLayout(layout);
 
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(20)
-                    .addComponent(topPanel, 250, 250, 250))
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(155)
-                    .addComponent(lblTitle))
-                .addComponent(centerPanel, 650, 650, 650)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(20)
+                                .addComponent(topPanel, 250, 250, 250))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(155)
+                                .addComponent(lblTitle))
+                        .addComponent(centerPanel, 650, 650, 650)
         );
 
         layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                .addGap(20)
-                .addComponent(topPanel, 45, 45, 45)
-                .addGap(20)
-                .addComponent(lblTitle)
-                .addGap(35)
-                .addComponent(centerPanel, 440, 440, 440)
-                .addGap(20)
+                layout.createSequentialGroup()
+                        .addGap(20)
+                        .addComponent(topPanel, 45, 45, 45)
+                        .addGap(20)
+                        .addComponent(lblTitle)
+                        .addGap(35)
+                        .addComponent(centerPanel, 440, 440, 440)
+                        .addGap(20)
         );
 
         setContentPane(mainPanel);

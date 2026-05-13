@@ -13,6 +13,7 @@ public class HoaDonService {
         return hoaDonDAO.getAllHoaDon();
     }
 
+    
     public boolean kiemTraHoaDon(HoaDon hd) {
         if (hd.getMaKH() <= 0) {
             return false;
