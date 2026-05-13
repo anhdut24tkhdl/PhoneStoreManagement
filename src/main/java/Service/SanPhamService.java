@@ -64,4 +64,12 @@ public class SanPhamService {
     public double tinhThanhTien(int soLuong, double donGia) {
         return soLuong * donGia;
     }
+    
+    public boolean giamSoLuong(int maSP, int soLuongBan) {
+        if (maSP <= 0 || soLuongBan <= 0) {
+            return false;
+        }
+
+        return sanPhamDAO.giamSoLuong(maSP, soLuongBan);
+    }
 }

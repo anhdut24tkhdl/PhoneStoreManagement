@@ -1,15 +1,15 @@
-package Dao;
+package DAO;
 
 import Database.ConnectionDb;
-import Model.PhieuNhap;
+import Model.HangDienThoai;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class PhieuNhapDAO {
+public class HangDienThoaiDAO {
 
-    public ArrayList<PhieuNhap> getAllPhieuNhap() {
-        ArrayList<PhieuNhap> list = new ArrayList<>();
-        String sql = "SELECT * FROM PhieuNhap";
+    public ArrayList<HangDienThoai> getAllHangDienThoai() {
+        ArrayList<HangDienThoai> list = new ArrayList<>();
+        String sql = "SELECT * FROM HangDienThoai";
 
         try {
             Connection conn = ConnectionDb.getConnection();
@@ -17,14 +17,10 @@ public class PhieuNhapDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                PhieuNhap pn = new PhieuNhap();
-
-                pn.setMaPN(rs.getInt("MaPN"));
-                pn.setMaNV(rs.getInt("MaNV"));
-                pn.setNgayNhap(rs.getTimestamp("NgayNhap"));
-                pn.setTongTien(rs.getDouble("TongTien"));
-
-                list.add(pn);
+                HangDienThoai h = new HangDienThoai();
+                h.setMaHang(rs.getInt("MaHang"));
+                h.setTenHang(rs.getString("TenHang"));
+                list.add(h);
             }
 
         } catch (Exception e) {
@@ -34,15 +30,14 @@ public class PhieuNhapDAO {
         return list;
     }
 
-    public boolean themPhieuNhap(PhieuNhap pn) {
-        String sql = "INSERT INTO PhieuNhap(MaNV, TongTien) VALUES (?, ?)";
+    public boolean themHangDienThoai(HangDienThoai h) {
+        String sql = "INSERT INTO HangDienThoai(TenHang) VALUES (?)";
 
         try {
             Connection conn = ConnectionDb.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, pn.getMaNV());
-            ps.setDouble(2, pn.getTongTien());
+            ps.setString(1, h.getTenHang());
 
             return ps.executeUpdate() > 0;
 
@@ -53,16 +48,15 @@ public class PhieuNhapDAO {
         return false;
     }
 
-    public boolean suaPhieuNhap(PhieuNhap pn) {
-        String sql = "UPDATE PhieuNhap SET MaNV=?, TongTien=? WHERE MaPN=?";
+    public boolean suaHangDienThoai(HangDienThoai h) {
+        String sql = "UPDATE HangDienThoai SET TenHang=? WHERE MaHang=?";
 
         try {
             Connection conn = ConnectionDb.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, pn.getMaNV());
-            ps.setDouble(2, pn.getTongTien());
-            ps.setInt(3, pn.getMaPN());
+            ps.setString(1, h.getTenHang());
+            ps.setInt(2, h.getMaHang());
 
             return ps.executeUpdate() > 0;
 
@@ -73,14 +67,14 @@ public class PhieuNhapDAO {
         return false;
     }
 
-    public boolean xoaPhieuNhap(int maPN) {
-        String sql = "DELETE FROM PhieuNhap WHERE MaPN=?";
+    public boolean xoaHangDienThoai(int maHang) {
+        String sql = "DELETE FROM HangDienThoai WHERE MaHang=?";
 
         try {
             Connection conn = ConnectionDb.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, maPN);
+            ps.setInt(1, maHang);
 
             return ps.executeUpdate() > 0;
 

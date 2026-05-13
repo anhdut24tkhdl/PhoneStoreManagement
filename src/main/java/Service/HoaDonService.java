@@ -66,4 +66,12 @@ public class HoaDonService {
 
         return tong;
     }
+    
+    public int themHoaDonLayMaHD(HoaDon hd) {
+        if (!kiemTraHoaDon(hd)) {
+            return -1;
+        }
+
+        return hoaDonDAO.themHoaDonLayMaHD(hd);
+    }
 }

@@ -1,8 +1,9 @@
 package Service;
 
-import Dao.ChiTietPhieuNhapDAO;
 import Model.ChiTietPhieuNhap;
 import java.util.ArrayList;
+
+import DAO.ChiTietPhieuNhapDAO;
 
 public class ChiTietPhieuNhapService {
 

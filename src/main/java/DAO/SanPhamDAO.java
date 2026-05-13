@@ -96,4 +96,23 @@ public class SanPhamDAO {
 
         return false;
     }
+    public boolean giamSoLuong(int maSP, int soLuongBan) {
+        String sql = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSP = ? AND SoLuong >= ?";
+
+        try {
+            Connection conn = ConnectionDb.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, soLuongBan);
+            ps.setInt(2, maSP);
+            ps.setInt(3, soLuongBan);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

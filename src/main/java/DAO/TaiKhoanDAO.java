@@ -1,4 +1,4 @@
-package Dao;
+package DAO;
 
 import Database.ConnectionDb;
 import Model.TaiKhoan;
@@ -22,6 +22,7 @@ public class TaiKhoanDAO {
                 TaiKhoan tk = new TaiKhoan();
 
                 tk.setMaTK(rs.getInt("MaTK"));
+                tk.setMaNV(rs.getInt("MaNV"));
                 tk.setTenDangNhap(rs.getString("TenDangNhap"));
                 tk.setMatKhau(rs.getString("MatKhau"));
                 tk.setVaiTro(rs.getString("VaiTro"));

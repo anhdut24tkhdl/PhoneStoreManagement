@@ -91,4 +91,31 @@ public class HoaDonDAO {
 
         return false;
     }
+    public int themHoaDonLayMaHD(HoaDon hd) {
+        String sql = "INSERT INTO HoaDon(MaKH, MaNV, TongTien) VALUES (?, ?, ?)";
+
+        try {
+            Connection conn = ConnectionDb.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, hd.getMaKH());
+            ps.setInt(2, hd.getMaNV());
+            ps.setDouble(3, hd.getTongTien());
+
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 }

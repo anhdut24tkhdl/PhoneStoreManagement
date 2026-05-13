@@ -1,4 +1,4 @@
-    package Dao;
+    package DAO;
 
 import Database.ConnectionDb;
 import Model.ChiTietPhieuNhap;

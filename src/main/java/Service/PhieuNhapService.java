@@ -1,8 +1,9 @@
 package Service;
 
-import Dao.PhieuNhapDAO;
 import Model.PhieuNhap;
 import java.util.ArrayList;
+
+import DAO.PhieuNhapDAO;
 
 public class PhieuNhapService {
 
