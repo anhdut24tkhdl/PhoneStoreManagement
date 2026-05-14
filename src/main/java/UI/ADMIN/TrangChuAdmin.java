@@ -1,7 +1,6 @@
 package UI.ADMIN;
 
 import UI.DangNhap;
-
 import Utils.Session;
 import java.awt.*;
 import javax.swing.*;
@@ -11,6 +10,7 @@ public class TrangChuAdmin extends JFrame {
 
     private JButton btnQLNV;
     private JButton btnQLSP;
+    private JButton btnQLTK;
     private JButton btnQLH;
     private JButton btnQLHD;
     private JButton btnQLPN;
@@ -27,14 +27,14 @@ public class TrangChuAdmin extends JFrame {
     private void initComponents() {
         setTitle("Trang chủ Admin");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(820, 580);
+        setSize(820, 660);
         setResizable(false);
 
         JPanel root = new JPanel(new GridBagLayout());
         root.setBackground(new Color(230, 240, 255));
 
         JPanel card = new JPanel();
-        card.setPreferredSize(new Dimension(700, 480));
+        card.setPreferredSize(new Dimension(700, 560));
         card.setBackground(Color.WHITE);
         card.setBorder(new EmptyBorder(30, 45, 30, 45));
         card.setLayout(new BorderLayout(0, 25));
@@ -74,17 +74,19 @@ public class TrangChuAdmin extends JFrame {
 
         btnQLNV = createMenuButton("Quản lý nhân viên", new Color(37, 99, 235));
         btnQLSP = createMenuButton("Quản lý sản phẩm", new Color(22, 163, 74));
+        btnQLTK = createMenuButton("Quản lý tài khoản", new Color(79, 70, 229));
         btnQLH = createMenuButton("Quản lý hãng điện thoại", new Color(124, 58, 237));
         btnQLHD = createMenuButton("Quản lý hóa đơn", new Color(249, 115, 22));
         btnQLPN = createMenuButton("Quản lý phiếu nhập", new Color(14, 165, 233));
         btnThoat = createMenuButton("Đăng xuất", new Color(220, 38, 38));
 
-        JPanel buttonGrid = new JPanel(new GridLayout(3, 2, 20, 20));
+        JPanel buttonGrid = new JPanel(new GridLayout(4, 2, 20, 20));
         buttonGrid.setBackground(Color.WHITE);
-        buttonGrid.setPreferredSize(new Dimension(600, 250));
+        buttonGrid.setPreferredSize(new Dimension(600, 330));
 
         buttonGrid.add(btnQLNV);
         buttonGrid.add(btnQLSP);
+        buttonGrid.add(btnQLTK);
         buttonGrid.add(btnQLH);
         buttonGrid.add(btnQLHD);
         buttonGrid.add(btnQLPN);
@@ -109,6 +111,12 @@ public class TrangChuAdmin extends JFrame {
         btnQLSP.addActionListener(e -> {
             QLSP qlsp = new QLSP();
             qlsp.setVisible(true);
+            dispose();
+        });
+
+        btnQLTK.addActionListener(e -> {
+            QLTaiKhoan qltk = new QLTaiKhoan();
+            qltk.setVisible(true);
             dispose();
         });
 

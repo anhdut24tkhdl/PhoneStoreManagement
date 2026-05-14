@@ -4,21 +4,25 @@ import Model.PhieuNhap;
 import Service.PhieuNhapService;
 import Utils.Session;
 
+import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class QLPhieuNhap extends javax.swing.JFrame {
+public class QLPhieuNhap extends JFrame {
 
-    private static final java.util.logging.Logger logger =
-            java.util.logging.Logger.getLogger(QLPhieuNhap.class.getName());
+    private JTable tblPhieuNhap;
+    private JScrollPane scrollPane;
 
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblPhieuNhap;
+    private JButton btnChiTiet;
+    private JButton btnLamMoi;
+    private JButton btnQuayLai;
 
-    private javax.swing.JButton btnChiTiet;
-    private javax.swing.JButton btnLamMoi;
-    private javax.swing.JButton btnQuayLai;
+    private JLabel lblTitle;
+    private JLabel lblSubTitle;
 
     private boolean choPhepSua;
 
@@ -28,26 +32,118 @@ public class QLPhieuNhap extends javax.swing.JFrame {
 
     public QLPhieuNhap(boolean choPhepSua) {
         this.choPhepSua = choPhepSua;
-
         initComponents();
-        getContentPane().setBackground(new java.awt.Color(135, 206, 235));
-        customTable();
         loadPhieuNhap();
     }
 
+    private void initComponents() {
+        setTitle("Quản lý phiếu nhập");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 620);
+        setResizable(false);
+
+        JPanel root = new JPanel(new GridBagLayout());
+        root.setBackground(new Color(230, 240, 255));
+
+        JPanel card = new JPanel();
+        card.setPreferredSize(new Dimension(800, 520));
+        card.setBackground(Color.WHITE);
+        card.setBorder(new EmptyBorder(28, 35, 28, 35));
+        card.setLayout(new BorderLayout(0, 22));
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(Color.WHITE);
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+
+        lblTitle = new JLabel("QUẢN LÝ PHIẾU NHẬP");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblTitle.setForeground(new Color(0, 86, 179));
+        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblSubTitle = new JLabel("Danh sách phiếu nhập hàng và tổng tiền nhập kho");
+        lblSubTitle.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblSubTitle.setForeground(new Color(100, 116, 139));
+        lblSubTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        headerPanel.add(lblTitle);
+        headerPanel.add(Box.createVerticalStrut(8));
+        headerPanel.add(lblSubTitle);
+
+        tblPhieuNhap = new JTable();
+        tblPhieuNhap.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Mã PN", "Mã NV", "Ngày nhập", "Tổng tiền"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        customTable();
+
+        scrollPane = new JScrollPane(tblPhieuNhap);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(203, 213, 225), 1));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+
+        btnChiTiet = createButton("Chi tiết", new Color(37, 99, 235), 125, 42);
+        btnLamMoi = createButton("Làm mới", new Color(14, 165, 233), 125, 42);
+        btnQuayLai = createButton("Quay lại", new Color(100, 116, 139), 125, 42);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 0));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(btnChiTiet);
+        buttonPanel.add(btnLamMoi);
+        buttonPanel.add(btnQuayLai);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 18));
+        centerPanel.setBackground(Color.WHITE);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        card.add(headerPanel, BorderLayout.NORTH);
+        card.add(centerPanel, BorderLayout.CENTER);
+
+        root.add(card);
+        setContentPane(root);
+
+        btnChiTiet.addActionListener(e -> xemChiTiet());
+        btnLamMoi.addActionListener(e -> loadPhieuNhap());
+        btnQuayLai.addActionListener(e -> quayLai());
+
+        setLocationRelativeTo(null);
+    }
+
     private void customTable() {
-        tblPhieuNhap.setRowHeight(30);
-        tblPhieuNhap.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
-
-        tblPhieuNhap.getTableHeader().setFont(
-                new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)
-        );
-
-        tblPhieuNhap.getTableHeader().setBackground(java.awt.Color.BLACK);
-        tblPhieuNhap.getTableHeader().setForeground(java.awt.Color.WHITE);
-
+        tblPhieuNhap.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tblPhieuNhap.setRowHeight(34);
+        tblPhieuNhap.setSelectionBackground(new Color(219, 234, 254));
+        tblPhieuNhap.setSelectionForeground(new Color(15, 23, 42));
+        tblPhieuNhap.setGridColor(new Color(226, 232, 240));
         tblPhieuNhap.setShowGrid(true);
-        tblPhieuNhap.setGridColor(java.awt.Color.GRAY);
+
+        tblPhieuNhap.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblPhieuNhap.getTableHeader().setBackground(new Color(37, 99, 235));
+        tblPhieuNhap.getTableHeader().setForeground(Color.WHITE);
+        tblPhieuNhap.getTableHeader().setPreferredSize(new Dimension(0, 38));
+    }
+
+    private JButton createButton(String text, Color bgColor, int width, int height) {
+        JButton button = new JButton(text);
+
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setVerticalAlignment(SwingConstants.CENTER);
+        button.setMargin(new Insets(0, 0, 0, 0));
+
+        return button;
     }
 
     private void loadPhieuNhap() {
@@ -55,12 +151,8 @@ public class QLPhieuNhap extends javax.swing.JFrame {
         ArrayList<PhieuNhap> list = service.getAllPhieuNhap();
 
         DefaultTableModel model = new DefaultTableModel();
-
         model.setColumnIdentifiers(new Object[]{
-            "Mã PN",
-            "Mã NV",
-            "Ngày nhập",
-            "Tổng tiền"
+            "Mã PN", "Mã NV", "Ngày nhập", "Tổng tiền"
         });
 
         for (PhieuNhap pn : list) {
@@ -68,13 +160,36 @@ public class QLPhieuNhap extends javax.swing.JFrame {
                 pn.getMaPN(),
                 pn.getMaNV(),
                 pn.getNgayNhap(),
-                String.format("%.1f triệu", pn.getTongTien() / 1000000)
+                formatTongTien(pn.getTongTien())
             });
         }
 
         tblPhieuNhap.setModel(model);
+        canChinhCot();
     }
 
+    private void canChinhCot() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        tblPhieuNhap.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblPhieuNhap.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        tblPhieuNhap.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tblPhieuNhap.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+
+        tblPhieuNhap.getColumnModel().getColumn(0).setPreferredWidth(90);
+        tblPhieuNhap.getColumnModel().getColumn(1).setPreferredWidth(90);
+        tblPhieuNhap.getColumnModel().getColumn(2).setPreferredWidth(180);
+        tblPhieuNhap.getColumnModel().getColumn(3).setPreferredWidth(180);
+    }
+
+    private String formatTongTien(double tongTien) {
+        DecimalFormat df = new DecimalFormat("#,###");
+        return df.format(tongTien) + " VNĐ";
+    }
 
     private void xemChiTiet() {
         int row = tblPhieuNhap.getSelectedRow();
@@ -86,9 +201,7 @@ public class QLPhieuNhap extends javax.swing.JFrame {
 
         int maPN = Integer.parseInt(tblPhieuNhap.getValueAt(row, 0).toString());
 
-        ChiTietPhieuNhapDialog dialog =
-                new ChiTietPhieuNhapDialog(this, true, maPN);
-
+        ChiTietPhieuNhapDialog dialog = new ChiTietPhieuNhapDialog(this, true, maPN);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
@@ -97,9 +210,7 @@ public class QLPhieuNhap extends javax.swing.JFrame {
         if (Session.currentUser != null
                 && "NhanVien".equalsIgnoreCase(Session.currentUser.getVaiTro())) {
 
-            UI.NhanVien.TrangChuNhanVien tc =
-                    new UI.NhanVien.TrangChuNhanVien();
-
+            UI.NhanVien.TrangChuNhanVien tc = new UI.NhanVien.TrangChuNhanVien();
             tc.setVisible(true);
 
         } else {
@@ -107,114 +218,23 @@ public class QLPhieuNhap extends javax.swing.JFrame {
             tc.setVisible(true);
         }
 
-        this.dispose();
-    }
-
-    private void initComponents() {
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblPhieuNhap = new javax.swing.JTable();
-
-        btnChiTiet = new javax.swing.JButton();
-        btnLamMoi = new javax.swing.JButton();
-        btnQuayLai = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        tblPhieuNhap.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "Mã PN",
-                    "Mã NV",
-                    "Ngày nhập",
-                    "Tổng tiền"
-                }
-        ));
-
-        jScrollPane1.setViewportView(tblPhieuNhap);
-
-
-        btnChiTiet.setText("Chi Tiết");
-        btnChiTiet.addActionListener(e -> xemChiTiet());
-
-        btnLamMoi.setText("Làm mới");
-        btnLamMoi.addActionListener(e -> loadPhieuNhap());
-
-        btnQuayLai.setText("Quay Lại");
-        btnQuayLai.addActionListener(e -> quayLai());
-
-        javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(getContentPane());
-
-        getContentPane().setLayout(layout);
-
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(143)
-
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-
-                                        .addComponent(jScrollPane1,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                452,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(btnChiTiet)
-                                                .addGap(30)
-                                                .addComponent(btnLamMoi)
-                                                .addGap(30)
-                                                .addComponent(btnQuayLai)))
-
-                                .addContainerGap(143, Short.MAX_VALUE))
-        );
-
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(20)
-
-                                .addComponent(jScrollPane1,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        310,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-
-                                .addGap(18)
-
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                     
-                                        .addComponent(btnChiTiet)
-                                        .addComponent(btnLamMoi)
-                                        .addComponent(btnQuayLai))
-
-                                .addContainerGap(68, Short.MAX_VALUE))
-        );
-
-        pack();
-        setLocationRelativeTo(null);
+        dispose();
     }
 
     public static void main(String args[]) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info
-                    : javax.swing.UIManager.getInstalledLookAndFeels()) {
-
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-
-        } catch (ReflectiveOperationException
-                | javax.swing.UnsupportedLookAndFeelException ex) {
-
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        java.awt.EventQueue.invokeLater(
-                () -> new QLPhieuNhap(true).setVisible(true)
-        );
+        EventQueue.invokeLater(() -> {
+            new QLPhieuNhap(true).setVisible(true);
+        });
     }
 }
