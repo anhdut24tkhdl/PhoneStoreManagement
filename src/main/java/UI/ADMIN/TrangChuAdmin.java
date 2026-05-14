@@ -125,7 +125,7 @@ public class TrangChuAdmin extends JFrame {
         });
 
         btnQLPN.addActionListener(e -> {
-            QLPhieuNhap qlpn = new QLPhieuNhap();
+            QLPhieuNhap qlpn = new QLPhieuNhap(false);
             qlpn.setVisible(true);
             dispose();
         });

@@ -1,7 +1,6 @@
 package Service;
 
 import DAO.SanPhamDAO;
-
 import Model.SanPham;
 import java.util.ArrayList;
 
@@ -64,12 +63,20 @@ public class SanPhamService {
     public double tinhThanhTien(int soLuong, double donGia) {
         return soLuong * donGia;
     }
-    
+
     public boolean giamSoLuong(int maSP, int soLuongBan) {
         if (maSP <= 0 || soLuongBan <= 0) {
             return false;
         }
 
         return sanPhamDAO.giamSoLuong(maSP, soLuongBan);
+    }
+
+    public boolean tangSoLuong(int maSP, int soLuongNhap) {
+        if (maSP <= 0 || soLuongNhap <= 0) {
+            return false;
+        }
+
+        return sanPhamDAO.tangSoLuong(maSP, soLuongNhap);
     }
 }

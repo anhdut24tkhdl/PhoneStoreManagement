@@ -18,12 +18,14 @@ public class SanPhamDAO {
 
             while (rs.next()) {
                 SanPham sp = new SanPham();
+
                 sp.setMaSP(rs.getInt("MaSP"));
                 sp.setTenSP(rs.getString("TenSP"));
                 sp.setMaHang(rs.getInt("MaHang"));
                 sp.setGiaBan(rs.getDouble("GiaBan"));
                 sp.setSoLuong(rs.getInt("SoLuong"));
                 sp.setMoTa(rs.getString("MoTa"));
+
                 list.add(sp);
             }
 
@@ -96,6 +98,7 @@ public class SanPhamDAO {
 
         return false;
     }
+
     public boolean giamSoLuong(int maSP, int soLuongBan) {
         String sql = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSP = ? AND SoLuong >= ?";
 
@@ -106,6 +109,25 @@ public class SanPhamDAO {
             ps.setInt(1, soLuongBan);
             ps.setInt(2, maSP);
             ps.setInt(3, soLuongBan);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean tangSoLuong(int maSP, int soLuongNhap) {
+        String sql = "UPDATE SanPham SET SoLuong = SoLuong + ? WHERE MaSP = ?";
+
+        try {
+            Connection conn = ConnectionDb.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, soLuongNhap);
+            ps.setInt(2, maSP);
 
             return ps.executeUpdate() > 0;
 

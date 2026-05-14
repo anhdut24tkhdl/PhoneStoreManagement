@@ -1,9 +1,8 @@
 package Service;
 
+import DAO.PhieuNhapDAO;
 import Model.PhieuNhap;
 import java.util.ArrayList;
-
-import DAO.PhieuNhapDAO;
 
 public class PhieuNhapService {
 
@@ -31,6 +30,14 @@ public class PhieuNhapService {
         }
 
         return phieuNhapDAO.themPhieuNhap(pn);
+    }
+
+    public int themPhieuNhapLayMaPN(PhieuNhap pn) {
+        if (!kiemTraPhieuNhap(pn)) {
+            return -1;
+        }
+
+        return phieuNhapDAO.themPhieuNhapLayMaPN(pn);
     }
 
     public boolean suaPhieuNhap(PhieuNhap pn) {

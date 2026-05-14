@@ -4,9 +4,9 @@ package Database;
 import java.sql.*;
 public class ConnectionDb {
 
-    private static final String URL = "jdbc:mysql://localhost:3307/phonestoremanagement";
+    private static final String URL = "jdbc:mysql://localhost:3306/phonestoremanagement";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "12345678";
 
     public static Connection getConnection() {
         Connection conn = null;

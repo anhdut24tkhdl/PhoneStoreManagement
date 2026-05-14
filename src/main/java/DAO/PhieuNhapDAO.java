@@ -53,6 +53,37 @@ public class PhieuNhapDAO {
         return false;
     }
 
+    public int themPhieuNhapLayMaPN(PhieuNhap pn) {
+        String sql = "INSERT INTO PhieuNhap(MaNV, TongTien) VALUES (?, ?)";
+
+        try {
+            Connection conn = ConnectionDb.getConnection();
+
+            PreparedStatement ps = conn.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            ps.setInt(1, pn.getMaNV());
+            ps.setDouble(2, pn.getTongTien());
+
+            int row = ps.executeUpdate();
+
+            if (row > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
     public boolean suaPhieuNhap(PhieuNhap pn) {
         String sql = "UPDATE PhieuNhap SET MaNV=?, TongTien=? WHERE MaPN=?";
 

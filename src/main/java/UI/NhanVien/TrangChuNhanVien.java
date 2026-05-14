@@ -11,6 +11,7 @@ public class TrangChuNhanVien extends JFrame {
     private JButton btnSPTK;
     private JButton btnQLKH;
     private JButton btnQLDH;
+    private JButton btnQLPN;
     private JButton btnDangXuat;
 
     private JLabel lblTitle;
@@ -24,14 +25,14 @@ public class TrangChuNhanVien extends JFrame {
     private void initComponents() {
         setTitle("Trang chủ nhân viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(760, 560);
+        setSize(760, 620);
         setResizable(false);
 
         JPanel root = new JPanel(new GridBagLayout());
         root.setBackground(new Color(230, 240, 255));
 
         JPanel card = new JPanel();
-        card.setPreferredSize(new Dimension(620, 440));
+        card.setPreferredSize(new Dimension(620, 500));
         card.setBackground(Color.WHITE);
         card.setBorder(new EmptyBorder(32, 50, 32, 50));
         card.setLayout(new BorderLayout(0, 28));
@@ -72,16 +73,18 @@ public class TrangChuNhanVien extends JFrame {
         btnSPTK = createMenuButton("Xem sản phẩm tồn kho", new Color(37, 99, 235));
         btnQLKH = createMenuButton("Quản lý khách hàng", new Color(22, 163, 74));
         btnQLDH = createMenuButton("Quản lý đơn hàng", new Color(249, 115, 22));
+        btnQLPN = createMenuButton("Quản lý phiếu nhập", new Color(14, 165, 233));
         btnDangXuat = createMenuButton("Đăng xuất", new Color(220, 38, 38));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.setLayout(new GridLayout(2, 2, 20, 20));
-        buttonPanel.setPreferredSize(new Dimension(500, 170));
+        buttonPanel.setLayout(new GridLayout(3, 2, 20, 20));
+        buttonPanel.setPreferredSize(new Dimension(500, 250));
 
         buttonPanel.add(btnSPTK);
         buttonPanel.add(btnQLKH);
         buttonPanel.add(btnQLDH);
+        buttonPanel.add(btnQLPN);
         buttonPanel.add(btnDangXuat);
 
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -109,6 +112,12 @@ public class TrangChuNhanVien extends JFrame {
         btnQLDH.addActionListener(e -> {
             HoaDon hd = new HoaDon();
             hd.setVisible(true);
+            dispose();
+        });
+
+        btnQLPN.addActionListener(e -> {
+            QLPhieuNhap qlpn = new QLPhieuNhap();
+            qlpn.setVisible(true);
             dispose();
         });
 
@@ -141,12 +150,15 @@ public class TrangChuNhanVien extends JFrame {
 
     public static void main(String args[]) {
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info
+                    : UIManager.getInstalledLookAndFeels()) {
+
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
